@@ -1,11 +1,10 @@
-﻿// <copyright file="AppConfigTableName.cs" company="Microsoft">
+﻿// <copyright file="ButtonClickLogTableName.cs" company="Microsoft">
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 // </copyright>
 
 namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
 {
-
     /// <summary>
     /// Button Click Log table information.
     /// </summary>

@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// <copyright file="ButtonClickLog.cs" company="Microsoft">
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+// </copyright>
 
 namespace Microsoft.Teams.Apps.CompanyCommunicator.Models
 {
+    using System;
+
     /// <summary>
     /// Button Click Log model class.
     /// </summary>

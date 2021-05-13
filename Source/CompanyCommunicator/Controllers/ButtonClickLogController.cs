@@ -1,12 +1,15 @@
-﻿namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
+﻿// <copyright file="ButtonClickLogController.cs" company="Microsoft">
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+// </copyright>
+
+namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
 {
+    using System;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories;
     using Microsoft.Teams.Apps.CompanyCommunicator.Models;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Controller for the button click log data.
@@ -17,18 +20,13 @@
     {
         private readonly IButtonClickLogRepository buttonClickLogDataRepository;
 
-        // GET: api/<ButtonClickLogController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ButtonClickLogController"/> class.
+        /// </summary>
+        /// <param name="repository">Button Click Log repository.</param>
+        public ButtonClickLogController(IButtonClickLogRepository repository)
         {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<ButtonClickLogController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
+            this.buttonClickLogDataRepository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         /// <summary>
@@ -48,17 +46,5 @@
 
             return this.Ok();
         }
-
-        /*// PUT api/<ButtonClickLogController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ButtonClickLogController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }*/
     }
 }
