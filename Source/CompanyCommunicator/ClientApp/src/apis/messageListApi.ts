@@ -91,3 +91,14 @@ export const getAuthenticationConsentMetadata = async (windowLocationOriginDomai
     let url = `${baseAxiosUrl}/authenticationMetadata/consentUrl?windowLocationOriginDomain=${windowLocationOriginDomain}&loginhint=${login_hint}`;
     return await axios.get(url, undefined, false);
 }
+
+export const getButtonClickLog = async (pk: string, rk: string): Promise<any> => {
+    let url = `${baseAxiosUrl}/buttonclicklog/${pk}/${rk}`;
+    
+    return await axios.get(url);
+}
+
+export const updateButtonClickLog = async (btnClickLog: {}): Promise<any> => {
+    let url = `${baseAxiosUrl}/buttonclicklog/countButtonClick`;
+    return await axios.put(url, btnClickLog);
+}

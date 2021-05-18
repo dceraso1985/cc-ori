@@ -17,6 +17,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
     using Microsoft.Graph;
     using Microsoft.Teams.Apps.CompanyCommunicator.Authentication;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Extensions;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.ExportData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.NotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.SentNotificationData;
@@ -38,6 +39,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
         private readonly INotificationDataRepository notificationDataRepository;
         private readonly ISentNotificationDataRepository sentNotificationDataRepository;
         private readonly ITeamDataRepository teamDataRepository;
+        private readonly IButtonClickLogRepository buttonClickLogRepository;
         private readonly IPrepareToSendQueue prepareToSendQueue;
         private readonly IDataQueue dataQueue;
         private readonly double forceCompleteMessageDelayInSeconds;
@@ -159,6 +161,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             var result = new List<SentNotificationSummary>();
             foreach (var notificationEntity in notificationEntities)
             {
+                var buttonClick = await this.buttonClickLogRepository.GetClicksCount(notificationEntity.PartitionKey);
+                buttonClick = buttonClick.Where(x => x.Timestamp != DateTimeOffset.MinValue);
+
                 var summary = new SentNotificationSummary
                 {
                     Id = notificationEntity.Id,
@@ -171,6 +176,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                     TotalMessageCount = notificationEntity.TotalMessageCount,
                     SendingStartedDate = notificationEntity.SendingStartedDate,
                     Status = notificationEntity.GetStatus(),
+                    ClicksCount = buttonClick.Count(),
                 };
 
                 result.Add(summary);

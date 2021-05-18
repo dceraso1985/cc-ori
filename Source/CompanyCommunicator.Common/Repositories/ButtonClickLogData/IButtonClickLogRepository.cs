@@ -5,6 +5,7 @@
 
 namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -12,17 +13,42 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
     /// </summary>
     public interface IButtonClickLogRepository : IRepository<ButtonClickLogEntity>
     {
-        /// <summary>
+        /*/// <summary>
         /// Gets table row key generator.
         /// </summary>
-        public TableRowKeyGenerator TableRowKeyGenerator { get; }
+        public TableRowKeyGenerator TableRowKeyGenerator { get; }*/
 
         /// <summary>
         /// Create a Button Click Log.
         /// </summary>
         /// <param name="partitionKey">Partition Key.</param>
         /// <param name="userId">User ID.</param>
+        /// <param name="url">Button Link.</param>
         /// <returns>A task that represents the work queued to execute.</returns>
-        public Task CreateButtonClickLogAsync(string partitionKey, string userId);
+        public Task CreateButtonClickLogAsync(string partitionKey, string userId, string url);
+
+        /// <summary>
+        /// Get a Button Click Log.
+        /// </summary>
+        /// <param name="partitionKey">Partition Key.</param>
+        /// <param name="userId">User ID.</param>
+        /// <returns>A task that represents the work queued to execute.</returns>
+        public Task<ButtonClickLogEntity> GetButtonClickLogAsync(string partitionKey, string userId);
+
+        /// <summary>
+        /// Update an existing Button Click Log.
+        /// </summary>
+        /// <param name="partitionKey">Partition Key.</param>
+        /// <param name="userId">User ID.</param>
+        /// <param name="buttonLink">Button Link.</param>
+        /// <returns>A task that represents the work queued to execute.</returns>
+        public Task CountButtonClickLogAsync(string partitionKey, string userId, string buttonLink);
+
+        /// <summary>
+        /// Get a Count Button Click Log.
+        /// </summary>
+        /// <param name="partitionKey">Partition Key.</param>
+        /// <returns>A task that represents the work queued to execute.</returns>
+        public Task<IEnumerable<ButtonClickLogEntity>> GetClicksCount(string partitionKey);
     }
 }

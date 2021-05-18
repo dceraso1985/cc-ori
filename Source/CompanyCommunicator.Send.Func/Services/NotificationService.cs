@@ -9,6 +9,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Services
     using System.Net;
     using System.Threading.Tasks;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Extensions;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.NotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.SentNotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MessageQueues.SendQueue;
@@ -20,6 +21,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Services
     {
         private readonly IGlobalSendingNotificationDataRepository globalSendingNotificationDataRepository;
         private readonly ISentNotificationDataRepository sentNotificationDataRepository;
+        private readonly IButtonClickLogRepository buttonClickLogRepository;
+        private readonly INotificationDataRepository notificationDataRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationService"/> class.
@@ -114,6 +117,20 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Services
             if (statusCode == (int)HttpStatusCode.Created)
             {
                 notification.DeliveryStatus = SentNotificationDataEntity.Succeeded;
+
+                // Process for add Button Click Log row.
+                // Get Notification url
+                NotificationDataEntity notificationData = await this.notificationDataRepository.GetAsync(
+                    partitionKey: NotificationDataTableNames.SentNotificationsPartition,
+                    rowKey: notificationId);
+
+                // Create Button Click Log
+                await this.buttonClickLogRepository.CreateButtonClickLogAsync(notificationId, recipientId, notificationData.ButtonLink);
+
+                // Update Notification url with endpoint of React
+                notificationData.ButtonLink = "https://ccntv4.azurewebsites.net/count-button-click/" + $"{notificationId}/{recipientId}";
+
+                await this.notificationDataRepository.CreateOrUpdateAsync(notificationData);
             }
             else if (statusCode == (int)HttpStatusCode.TooManyRequests)
             {

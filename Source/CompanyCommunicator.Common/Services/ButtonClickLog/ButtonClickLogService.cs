@@ -42,7 +42,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services
             {
                 PartitionKey = partitionKey,
                 RowKey = ButtonClickLogTableName.ServiceUrlRowKey,
-                UserId = userId,
+                ButtonLink = userId,
                 Timestamp = DateTime.Now,
             };
 

@@ -6,6 +6,7 @@
 namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.ButtonClickLogData
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -21,11 +22,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.ButtonCli
         /// </summary>
         /// <param name="logger">The logging service.</param>
         /// <param name="repositoryOptions">Options used to create the repository.</param>
-        /// <param name="tableRowKeyGenerator">Table row key generator service.</param>
         public ButtonClickLogRepository(
             ILogger<ButtonClickLogRepository> logger,
-            IOptions<RepositoryOptions> repositoryOptions,
-            TableRowKeyGenerator tableRowKeyGenerator)
+            IOptions<RepositoryOptions> repositoryOptions)
             : base(
                   logger,
                   storageAccountConnectionString: repositoryOptions.Value.StorageAccountConnectionString,
@@ -33,28 +32,35 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.ButtonCli
                   defaultPartitionKey: ButtonClickLogTableName.SettingsPartition,
                   ensureTableExists: repositoryOptions.Value.EnsureTableExists)
         {
-            this.TableRowKeyGenerator = tableRowKeyGenerator;
+            // this.TableRowKeyGenerator = tableRowKeyGenerator;
         }
 
-        /// <inheritdoc/>
-        public TableRowKeyGenerator TableRowKeyGenerator { get; }
+        /*/// <inheritdoc/>
+        public TableRowKeyGenerator TableRowKeyGenerator { get; }*/
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Create a Button Click Log.
+        /// </summary>
+        /// <param name="partitionKey">Partition Key.</param>
+        /// <param name="userId">User ID.</param>
+        /// <param name="url">Button Link.</param>
+        /// <returns>A task that represents the work queued to execute.</returns>
         public async Task CreateButtonClickLogAsync(
             string partitionKey,
-            string userId)
+            string userId,
+            string url)
         {
             try
             {
-                var newId = this.TableRowKeyGenerator.CreateNewKeyOrderingOldestToMostRecent();
+                // var newId = this.TableRowKeyGenerator.CreateNewKeyOrderingOldestToMostRecent();
 
                 // TODO: Set the string "(copy)" in a resource file for multi-language support.
                 var newButtonClickLogEntity = new ButtonClickLogEntity
                 {
                     PartitionKey = partitionKey,
-                    RowKey = newId,
-                    UserId = userId,
-                    Timestamp = DateTime.UtcNow,
+                    RowKey = userId,
+                    ButtonLink = url,
+                    Timestamp = DateTime.MinValue,
                 };
 
                 await this.CreateOrUpdateAsync(newButtonClickLogEntity);
@@ -64,6 +70,59 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.ButtonCli
                 this.Logger.LogError(ex, ex.Message);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Get a Button Click Log.
+        /// </summary>
+        /// <param name="partitionKey">Partition Key.</param>
+        /// <param name="userId">User ID.</param>
+        /// <returns>A task that represents the work queued to execute.</returns>
+        public Task<ButtonClickLogEntity> GetButtonClickLogAsync(string partitionKey, string userId)
+        {
+            var result = this.GetAsync(partitionKey, userId);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Update an existing Button Click Log.
+        /// </summary>
+        /// <param name="partitionKey">Partition Key.</param>
+        /// <param name="userId">User ID.</param>
+        /// <param name="buttonLink">Button Link.</param>
+        /// <returns>A task that represents the work queued to execute.</returns>
+        public async Task CountButtonClickLogAsync(string partitionKey, string userId, string buttonLink)
+        {
+            try
+            {
+                var buttonClickLogEntity = new ButtonClickLogEntity
+                {
+                    PartitionKey = partitionKey,
+                    RowKey = userId,
+                    ButtonLink = buttonLink,
+                    Timestamp = DateTime.UtcNow,
+                };
+
+                await this.CreateOrUpdateAsync(buttonClickLogEntity);
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Get a Count Button Click Log.
+        /// </summary>
+        /// <param name="partitionKey">Partition Key.</param>
+        /// <returns>A task that represents the work queued to execute.</returns>
+        public Task<IEnumerable<ButtonClickLogEntity>> GetClicksCount(string partitionKey)
+        {
+            var result = this.GetAllAsync(partitionKey);
+
+            return result;
         }
     }
 }

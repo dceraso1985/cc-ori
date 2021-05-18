@@ -16,6 +16,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
         /// <summary>
         /// Gets or sets the User Id value.
         /// </summary>
-        public string UserId { get; set; }
+        public string ButtonLink { get; set; }
     }
 }

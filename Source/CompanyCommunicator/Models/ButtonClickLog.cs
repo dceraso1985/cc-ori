@@ -25,11 +25,11 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Models
         /// <summary>
         /// Gets or sets User Id.
         /// </summary>
-        public string UserId { get; set; }
+        public string ButtonLink { get; set; }
 
         /// <summary>
         /// Gets or sets Time Stamp.
         /// </summary>
-        public DateTime TimeStamp { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }
