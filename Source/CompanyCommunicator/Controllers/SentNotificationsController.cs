@@ -162,7 +162,13 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             foreach (var notificationEntity in notificationEntities)
             {
                 var buttonClick = await this.buttonClickLogRepository.GetClicksCount(notificationEntity.PartitionKey);
-                buttonClick = buttonClick.Where(x => x.Timestamp != DateTimeOffset.MinValue);
+                int clicksCount = 0;
+
+                if (buttonClick != null)
+                {
+                    buttonClick = buttonClick.Where(x => x.Timestamp != DateTimeOffset.MinValue);
+                    clicksCount = buttonClick.Count();
+                }
 
                 var summary = new SentNotificationSummary
                 {
@@ -176,7 +182,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                     TotalMessageCount = notificationEntity.TotalMessageCount,
                     SendingStartedDate = notificationEntity.SendingStartedDate,
                     Status = notificationEntity.GetStatus(),
-                    ClicksCount = buttonClick.Count(),
+                    ClicksCount = clicksCount,
                 };
 
                 result.Add(summary);
