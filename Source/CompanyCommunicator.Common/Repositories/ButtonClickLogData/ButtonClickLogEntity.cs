@@ -14,7 +14,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
     public class ButtonClickLogEntity : TableEntity
     {
         /// <summary>
-        /// Gets or sets the User Id value.
+        /// Gets or sets the link to React endpoint.
         /// </summary>
         public string ButtonLink { get; set; }
     }

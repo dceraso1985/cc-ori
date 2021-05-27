@@ -60,7 +60,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.ButtonCli
                     PartitionKey = partitionKey,
                     RowKey = userId,
                     ButtonLink = url,
-                    Timestamp = DateTime.MinValue,
+                    Timestamp = DateTimeOffset.MinValue,
                 };
 
                 await this.CreateOrUpdateAsync(newButtonClickLogEntity);
@@ -101,7 +101,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.ButtonCli
                     PartitionKey = partitionKey,
                     RowKey = userId,
                     ButtonLink = buttonLink,
-                    Timestamp = DateTime.UtcNow,
+                    Timestamp = DateTimeOffset.UtcNow,
                 };
 
                 await this.CreateOrUpdateAsync(buttonClickLogEntity);

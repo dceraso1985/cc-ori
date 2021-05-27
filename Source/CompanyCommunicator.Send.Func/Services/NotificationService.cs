@@ -29,12 +29,18 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Services
         /// </summary>
         /// <param name="globalSendingNotificationDataRepository">The global sending notification data repository.</param>
         /// <param name="sentNotificationDataRepository">The sent notification data repository.</param>
+        /// <param name="buttonClickLogRepository">The button click log.</param>
+        /// <param name="notificationDataRepository">The notification.</param>
         public NotificationService(
             IGlobalSendingNotificationDataRepository globalSendingNotificationDataRepository,
-            ISentNotificationDataRepository sentNotificationDataRepository)
+            ISentNotificationDataRepository sentNotificationDataRepository,
+            IButtonClickLogRepository buttonClickLogRepository,
+            INotificationDataRepository notificationDataRepository)
         {
             this.globalSendingNotificationDataRepository = globalSendingNotificationDataRepository ?? throw new ArgumentNullException(nameof(globalSendingNotificationDataRepository));
             this.sentNotificationDataRepository = sentNotificationDataRepository ?? throw new ArgumentNullException(nameof(sentNotificationDataRepository));
+            this.buttonClickLogRepository = buttonClickLogRepository ?? throw new ArgumentNullException(nameof(buttonClickLogRepository));
+            this.notificationDataRepository = notificationDataRepository ?? throw new ArgumentNullException(nameof(notificationDataRepository));
         }
 
         /// <inheritdoc/>

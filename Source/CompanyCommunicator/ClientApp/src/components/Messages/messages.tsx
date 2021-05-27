@@ -29,7 +29,6 @@ export interface IMessage {
     title: string;
     sentDate: string;
     recipients: string;
-    clicksCount: number;
     acknowledgements?: string;
     reactions?: string;
     responses?: string;
@@ -124,7 +123,7 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
             key: "labels",
             content: (
                 <Flex vAlign="center" fill gap="gap.small">
-                    <Flex.Item size="size.quarter" variables={{ 'size.quarter': '19%' }} grow={1} >
+                    <Flex.Item size="size.quarter" variables={{ 'size.quarter': '24%' }} grow={1} >
                         <Text
                             truncated
                             weight="bold"
@@ -132,10 +131,10 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
                         >
                         </Text>
                     </Flex.Item>
-                    <Flex.Item size="size.quarter" variables={{ 'size.quarter': '19%' }}>
+                    <Flex.Item size="size.quarter" variables={{ 'size.quarter': '24%' }}>
                         <Text></Text>
                     </Flex.Item>
-                    <Flex.Item size="size.quarter" variables={{ 'size.quarter': '19%' }} shrink={false}>
+                    <Flex.Item size="size.quarter" variables={{ 'size.quarter': '24%' }} shrink={false}>
                         <Text
                             truncated
                             content={this.localize("Recipients")}
@@ -143,15 +142,7 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
                         >
                         </Text>
                     </Flex.Item>
-                    <Flex.Item size="size.quarter" variables={{ 'size.quarter': '19%' }} shrink={false}>
-                        <Text
-                            truncated
-                            content={this.localize("ClicksTitle")}
-                            weight="bold"
-                        >
-                        </Text>
-                    </Flex.Item>
-                    <Flex.Item size="size.quarter" variables={{ 'size.quarter': '19%' }} >
+                    <Flex.Item size="size.quarter" variables={{ 'size.quarter': '24%' }} >
                         <Text
                             truncated
                             content={this.localize("Sent")}

@@ -9,6 +9,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Test
     using System.Net;
     using System.Threading.Tasks;
     using FluentAssertions;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.NotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.SentNotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MessageQueues.SendQueue;
@@ -23,6 +24,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Test
     {
         private readonly Mock<ISentNotificationDataRepository> sentNotificationDataRepository = new Mock<ISentNotificationDataRepository>();
         private readonly Mock<IGlobalSendingNotificationDataRepository> globalSendingNotificationDataRepository = new Mock<IGlobalSendingNotificationDataRepository>();
+        private readonly Mock<IButtonClickLogRepository> buttonClickLogDataRepository = new Mock<IButtonClickLogRepository>();
+        private readonly Mock<INotificationDataRepository> notificationDataRepository = new Mock<INotificationDataRepository>();
         private readonly SendQueueMessageContent sendQueueMessageContent = new SendQueueMessageContent()
         {
             RecipientData = new RecipientData()
@@ -44,14 +47,18 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Test
         public void NotificationServiceConstructorTest()
         {
             // Arrange
-            Action action1 = () => new NotificationService(null /*globalSendingNotificationDataRepository*/, this.sentNotificationDataRepository.Object);
-            Action action2 = () => new NotificationService(this.globalSendingNotificationDataRepository.Object, null /*sentNotificationDataRepository*/);
-            Action action3 = () => new NotificationService(this.globalSendingNotificationDataRepository.Object, this.sentNotificationDataRepository.Object);
+            Action action1 = () => new NotificationService(null /*globalSendingNotificationDataRepository*/, this.sentNotificationDataRepository.Object, this.buttonClickLogDataRepository.Object, this.notificationDataRepository.Object);
+            Action action2 = () => new NotificationService(this.globalSendingNotificationDataRepository.Object, null /*sentNotificationDataRepository*/, this.buttonClickLogDataRepository.Object, this.notificationDataRepository.Object);
+            Action action3 = () => new NotificationService(this.globalSendingNotificationDataRepository.Object, this.sentNotificationDataRepository.Object, this.buttonClickLogDataRepository.Object, this.notificationDataRepository.Object);
+            Action action4 = () => new NotificationService(this.globalSendingNotificationDataRepository.Object, this.sentNotificationDataRepository.Object, null, this.notificationDataRepository.Object);
+            Action action5 = () => new NotificationService(this.globalSendingNotificationDataRepository.Object, this.sentNotificationDataRepository.Object, this.buttonClickLogDataRepository.Object, null);
 
             // Act and Assert.
             action1.Should().Throw<ArgumentNullException>("globalSendingNotificationDataRepository is null.");
             action2.Should().Throw<ArgumentNullException>("sentNotificationDataRepository is null.");
             action3.Should().NotThrow();
+            action4.Should().Throw<ArgumentNullException>("buttonClickLogDataRepository is null.");
+            action5.Should().Throw<ArgumentNullException>("notificationDataRepository is null.");
         }
 
         /// <summary>
@@ -364,7 +371,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Test
         /// </summary>
         private NotificationService GetNotificationService()
         {
-            return new NotificationService(this.globalSendingNotificationDataRepository.Object, this.sentNotificationDataRepository.Object);
+            return new NotificationService(this.globalSendingNotificationDataRepository.Object, this.sentNotificationDataRepository.Object, this.buttonClickLogDataRepository.Object, this.notificationDataRepository.Object);
         }
     }
 }

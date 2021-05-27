@@ -43,7 +43,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services
                 PartitionKey = partitionKey,
                 RowKey = ButtonClickLogTableName.ServiceUrlRowKey,
                 ButtonLink = userId,
-                Timestamp = DateTime.Now,
+                Timestamp = DateTimeOffset.UtcNow,
             };
 
             await this.repository.InsertOrMergeAsync(buttonClickLog);

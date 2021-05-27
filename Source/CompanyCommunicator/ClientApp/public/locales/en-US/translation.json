@@ -83,6 +83,5 @@
   "ExportErrorMessage": "Try exporting the results again. If the problem persists, contact your IT admin for help.",
   "ExportButtonText": "Export detailed results",
   "ExportButtonProgressText": "Export in progress",
-  "ErrorURLMessage": "URL must start with https://",
-  "ClicksTitle": "Clicks"
+  "ErrorURLMessage": "URL must start with https://"
 }
