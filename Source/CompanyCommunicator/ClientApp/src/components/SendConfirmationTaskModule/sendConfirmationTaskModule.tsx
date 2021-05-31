@@ -9,7 +9,7 @@ import { Loader, Button, Text, List, Image, Flex } from '@fluentui/react-northst
 import * as microsoftTeams from "@microsoft/teams-js";
 
 import './sendConfirmationTaskModule.scss';
-import { getDraftNotification, getConsentSummaries, sendDraftNotification, createButtonClickLog } from '../../apis/messageListApi';
+import { getDraftNotification, getConsentSummaries, sendDraftNotification } from '../../apis/messageListApi';
 import {
     getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
     setCardAuthor, setCardBtn
@@ -110,18 +110,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                             document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard);
                             if (this.state.message.buttonLink) {
                                 let link = this.state.message.buttonLink;
-                                let id = this.state.message.id;
-                                adaptiveCard.onExecuteAction = function (action) {
-                                    
-                                    // Save button click log
-                                    createButtonClickLog(id).then((response) => {
-                                        return response.status;
-                                    }).catch((error) => {
-                                        return error;
-                                    });
-                                    
-                                    window.open(link, '_blank');
-                                };
+                                adaptiveCard.onExecuteAction = function (action) { window.open(link, '_blank'); };
                             }
                         });
                     });
