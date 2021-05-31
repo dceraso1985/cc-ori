@@ -91,8 +91,3 @@ export const getAuthenticationConsentMetadata = async (windowLocationOriginDomai
     let url = `${baseAxiosUrl}/authenticationMetadata/consentUrl?windowLocationOriginDomain=${windowLocationOriginDomain}&loginhint=${login_hint}`;
     return await axios.get(url, undefined, false);
 }
-
-export const createButtonClickLog = async (partitionKey: string): Promise<any> => {
-    let url = baseAxiosUrl + "/buttonClickLog";
-    return await axios.post(url, partitionKey);
-}
