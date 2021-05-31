@@ -23,9 +23,15 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
         /// </summary>
         /// <param name="partitionKey">Partition Key.</param>
         /// <param name="userId">User ID.</param>
-        /// <param name="url">Button Link.</param>
         /// <returns>A task that represents the work queued to execute.</returns>
-        public Task CreateButtonClickLogAsync(string partitionKey, string userId, string url);
+        public Task CreateButtonClickLogAsync(string partitionKey, string userId);
+
+        /// <summary>
+        /// Get a list of Button Click Log.
+        /// </summary>
+        /// <param name="partitionKey">Partition Key.</param>
+        /// <returns>A task that represents the work queued to execute.</returns>
+        public Task<IEnumerable<ButtonClickLogEntity>> GetButtonClickLogAsync(string partitionKey);
 
         /// <summary>
         /// Get a Button Click Log.
@@ -35,14 +41,14 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
         /// <returns>A task that represents the work queued to execute.</returns>
         public Task<ButtonClickLogEntity> GetButtonClickLogAsync(string partitionKey, string userId);
 
-        /// <summary>
+        /*/// <summary>
         /// Update an existing Button Click Log.
         /// </summary>
         /// <param name="partitionKey">Partition Key.</param>
         /// <param name="userId">User ID.</param>
         /// <param name="buttonLink">Button Link.</param>
         /// <returns>A task that represents the work queued to execute.</returns>
-        public Task CountButtonClickLogAsync(string partitionKey, string userId, string buttonLink);
+        public Task CountButtonClickLogAsync(string partitionKey, string userId, string buttonLink);*/
 
         /// <summary>
         /// Get a Count Button Click Log.

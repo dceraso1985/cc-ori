@@ -13,9 +13,5 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
     /// </summary>
     public class ButtonClickLogEntity : TableEntity
     {
-        /// <summary>
-        /// Gets or sets the link to React endpoint.
-        /// </summary>
-        public string ButtonLink { get; set; }
     }
 }

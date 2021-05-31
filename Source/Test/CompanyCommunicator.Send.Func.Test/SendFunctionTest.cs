@@ -13,7 +13,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Test
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.NotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Resources;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MessageQueues.SendQueue;
@@ -36,8 +35,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Test
         private readonly Mock<ILogger> logger = new Mock<ILogger>();
         private readonly int deliveryCount = 0;
         private readonly DateTime dateTime = DateTime.Now;
-        private readonly Mock<IButtonClickLogRepository> buttonClickLogRepository = new Mock<IButtonClickLogRepository>();
-        private readonly Mock<INotificationDataRepository> notificationDataRepository = new Mock<INotificationDataRepository>();
         private IOptions<SendFunctionOptions> options = Options.Create(new SendFunctionOptions() { MaxNumberOfAttempts = 2, SendRetryDelayNumberOfSeconds = 300 });
 
         /// <summary>
@@ -47,15 +44,13 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Test
         public void SendFunctionConstructorTest()
         {
             // Arrange
-            Action action1 = () => new SendFunction(null /*options*/, this.notificationService.Object, this.messageService.Object, this.notificationRepo.Object, this.sendQueue.Object, this.localizer.Object, this.buttonClickLogRepository.Object, this.notificationDataRepository.Object);
-            Action action2 = () => new SendFunction(this.options, null /*notificationService*/, this.messageService.Object, this.notificationRepo.Object, this.sendQueue.Object, this.localizer.Object, this.buttonClickLogRepository.Object, this.notificationDataRepository.Object);
-            Action action3 = () => new SendFunction(this.options, this.notificationService.Object, null /*messageService*/, this.notificationRepo.Object, this.sendQueue.Object, this.localizer.Object, this.buttonClickLogRepository.Object, this.notificationDataRepository.Object);
-            Action action4 = () => new SendFunction(this.options, this.notificationService.Object, this.messageService.Object, null /*notificationRepo*/, this.sendQueue.Object, this.localizer.Object, this.buttonClickLogRepository.Object, this.notificationDataRepository.Object);
-            Action action5 = () => new SendFunction(this.options, this.notificationService.Object, this.messageService.Object, this.notificationRepo.Object, null /*sendQueue*/, this.localizer.Object, this.buttonClickLogRepository.Object, this.notificationDataRepository.Object);
-            Action action6 = () => new SendFunction(this.options, this.notificationService.Object, this.messageService.Object, this.notificationRepo.Object, this.sendQueue.Object, null /*localizer*/, this.buttonClickLogRepository.Object, this.notificationDataRepository.Object);
-            Action action7 = () => new SendFunction(this.options, this.notificationService.Object, this.messageService.Object, this.notificationRepo.Object, this.sendQueue.Object, this.localizer.Object, this.buttonClickLogRepository.Object, this.notificationDataRepository.Object);
-            Action action8 = () => new SendFunction(this.options, this.notificationService.Object, this.messageService.Object, this.notificationRepo.Object, this.sendQueue.Object, this.localizer.Object, null, this.notificationDataRepository.Object);
-            Action action9 = () => new SendFunction(this.options, this.notificationService.Object, this.messageService.Object, this.notificationRepo.Object, this.sendQueue.Object, this.localizer.Object, this.buttonClickLogRepository.Object, null);
+            Action action1 = () => new SendFunction(null /*options*/, this.notificationService.Object, this.messageService.Object, this.notificationRepo.Object, this.sendQueue.Object, this.localizer.Object);
+            Action action2 = () => new SendFunction(this.options, null /*notificationService*/, this.messageService.Object, this.notificationRepo.Object, this.sendQueue.Object, this.localizer.Object);
+            Action action3 = () => new SendFunction(this.options, this.notificationService.Object, null /*messageService*/, this.notificationRepo.Object, this.sendQueue.Object, this.localizer.Object);
+            Action action4 = () => new SendFunction(this.options, this.notificationService.Object, this.messageService.Object, null /*notificationRepo*/, this.sendQueue.Object, this.localizer.Object);
+            Action action5 = () => new SendFunction(this.options, this.notificationService.Object, this.messageService.Object, this.notificationRepo.Object, null /*sendQueue*/, this.localizer.Object);
+            Action action6 = () => new SendFunction(this.options, this.notificationService.Object, this.messageService.Object, this.notificationRepo.Object, this.sendQueue.Object, null /*localizer*/);
+            Action action7 = () => new SendFunction(this.options, this.notificationService.Object, this.messageService.Object, this.notificationRepo.Object, this.sendQueue.Object, this.localizer.Object);
 
             // Act and Assert.
             action1.Should().Throw<ArgumentNullException>("options is null.");
@@ -65,8 +60,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Test
             action5.Should().Throw<ArgumentNullException>("sendQueue is null.");
             action6.Should().Throw<ArgumentNullException>("localizer is null.");
             action7.Should().NotThrow();
-            action8.Should().Throw<ArgumentNullException>("buttonClickLogRepository is null.");
-            action9.Should().Throw<ArgumentNullException>("notificationDataRepository is null.");
         }
 
         /// <summary>
@@ -263,7 +256,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Test
         /// </summary>
         private SendFunction GetSendFunction()
         {
-            return new SendFunction(this.options, this.notificationService.Object, this.messageService.Object, this.notificationRepo.Object, this.sendQueue.Object, this.localizer.Object, this.buttonClickLogRepository.Object, this.notificationDataRepository.Object);
+            return new SendFunction(this.options, this.notificationService.Object, this.messageService.Object, this.notificationRepo.Object, this.sendQueue.Object, this.localizer.Object);
         }
     }
 }

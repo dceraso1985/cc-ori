@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { withTranslation, WithTranslation } from "react-i18next";
 import './statusTaskModule.scss';
-import { getSentNotification, exportNotification } from '../../apis/messageListApi';
+import { getSentNotification, exportNotification, createButtonClickLog } from '../../apis/messageListApi';
 import { RouteComponentProps } from 'react-router-dom';
 import * as AdaptiveCards from "adaptivecards";
 import { TooltipHost } from 'office-ui-fabric-react';
@@ -111,7 +111,18 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
                     let renderedCard = adaptiveCard.render();
                     document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard);
                     let link = this.state.message.buttonLink;
-                    adaptiveCard.onExecuteAction = function (action) { window.open(link, '_blank'); }
+                    let id = this.state.message.id;
+                    adaptiveCard.onExecuteAction = function (action) {
+
+                        // Save button click log
+                        createButtonClickLog(id).then((response) => {
+                            return response.status;
+                        }).catch((error) => {
+                            return error;
+                        });
+
+                        window.open(link, '_blank');
+                    }
                 });
             });
         }

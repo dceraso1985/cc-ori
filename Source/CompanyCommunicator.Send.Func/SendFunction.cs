@@ -14,7 +14,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Extensions;
-    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.NotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.SentNotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Resources;
@@ -44,8 +43,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
         private readonly IMessageService messageService;
         private readonly ISendQueue sendQueue;
         private readonly IStringLocalizer<Strings> localizer;
-        private readonly IButtonClickLogRepository buttonClickLogRepository;
-        private readonly INotificationDataRepository notificationDataRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SendFunction"/> class.
@@ -56,17 +53,13 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
         /// <param name="notificationRepo">Notification repository.</param>
         /// <param name="sendQueue">The send queue.</param>
         /// <param name="localizer">Localization service.</param>
-        /// <param name="buttonClickLogRepository">The button click log.</param>
-        /// <param name="notificationDataRepository">The notification.</param>
         public SendFunction(
             IOptions<SendFunctionOptions> options,
             INotificationService notificationService,
             IMessageService messageService,
             ISendingNotificationDataRepository notificationRepo,
             ISendQueue sendQueue,
-            IStringLocalizer<Strings> localizer,
-            IButtonClickLogRepository buttonClickLogRepository,
-            INotificationDataRepository notificationDataRepository)
+            IStringLocalizer<Strings> localizer)
         {
             if (options is null)
             {
@@ -81,8 +74,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
             this.notificationRepo = notificationRepo ?? throw new ArgumentNullException(nameof(notificationRepo));
             this.sendQueue = sendQueue ?? throw new ArgumentNullException(nameof(sendQueue));
             this.localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
-            this.buttonClickLogRepository = buttonClickLogRepository ?? throw new ArgumentNullException(nameof(buttonClickLogRepository));
-            this.notificationDataRepository = notificationDataRepository ?? throw new ArgumentNullException(nameof(notificationDataRepository));
         }
 
         /// <summary>
@@ -202,20 +193,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
             {
                 log.LogInformation($"Successfully sent the message." +
                     $"\nRecipient Id: {messageContent.RecipientData.RecipientId}");
-
-                // Process for add Button Click Log row.
-                // Get Notification url
-                NotificationDataEntity notificationData = await this.notificationDataRepository.GetAsync(
-                    partitionKey: NotificationDataTableNames.SentNotificationsPartition,
-                    rowKey: messageContent.NotificationId);
-
-                // Create Button Click Log
-                await this.buttonClickLogRepository.CreateButtonClickLogAsync(messageContent.NotificationId, messageContent.RecipientData.RecipientId, notificationData.ButtonLink);
-
-                // Update Notification url with endpoint of React
-                notificationData.ButtonLink = "https://ccntv4.azurewebsites.net/count-button-click/" + $"{messageContent.NotificationId}/{messageContent.RecipientData.RecipientId}";
-
-                await this.notificationDataRepository.CreateOrUpdateAsync(notificationData);
             }
             else
             {
